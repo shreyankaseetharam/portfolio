@@ -53,19 +53,29 @@
     }
 
     /* NAV */
+    body {
+      padding-left: 260px;
+    }
+
     nav {
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;
+      bottom: 0;
+      right: auto;
+      width: 260px;
       z-index: 100;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.2rem 4rem;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 2.5rem;
+      padding: 2.5rem 2rem;
       background: var(--nav-bg);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
+      border-bottom: none;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
     }
 
     .nav-logo {
@@ -81,8 +91,11 @@
 
     .nav-links {
       display: flex;
-      gap: 2.5rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.1rem;
       list-style: none;
+      width: 100%;
     }
 
     .nav-links a {
@@ -95,6 +108,7 @@
       padding: 0.35rem 0.6rem;
       border-radius: 999px;
       transition: color 0.2s, background-color 0.2s;
+      display: inline-block;
     }
 
     .nav-links a:hover {
@@ -119,13 +133,14 @@
     }
 
     .hero-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
+      display: block;
       width: 100%;
       max-width: 1200px;
       margin: 0 auto;
+    }
+
+    .hero-left {
+      max-width: 720px;
     }
 
     .hero-left h1 {
@@ -833,29 +848,42 @@
 
     /* MOBILE */
     @media (max-width: 768px) {
+      body {
+        padding-left: 0;
+      }
+
       nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: auto;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0;
         padding: 1rem 1.5rem;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
       }
 
       .nav-links {
+        flex-direction: row;
         gap: 0.65rem 1rem;
         flex-wrap: wrap;
         justify-content: flex-end;
         max-width: 70%;
+        width: auto;
       }
 
       #hero {
         padding: 0 1.5rem;
       }
 
-      .hero-grid {
-        grid-template-columns: 1fr;
-        gap: 3rem;
+      .hero-left {
         padding-top: 5rem;
-      }
-
-      .hero-right {
-        display: none;
       }
 
       .section-inner {
@@ -925,26 +953,6 @@
             rel="noopener noreferrer">GitHub</a>
           <a href="https://www.linkedin.com/in/mounashreeprasanna/" class="btn btn-primary" target="_blank"
             rel="noopener noreferrer">LinkedIn</a>
-        </div>
-      </div>
-      <div class="hero-right fade-in">
-        <a href="#projects" class="stat-card">
-          <span class="stat-label">Projects built</span>
-          <span class="stat-value">15</span>
-        </a>
-        <a href="#experience" class="stat-card">
-          <span class="stat-label">Years experience</span>
-          <span class="stat-value">3+</span>
-        </a>
-        <div class="stat-card stat-card-static stat-card-roles">
-          <span class="stat-label">Open to roles</span>
-          <div class="role-list">
-            <span class="role-chip">Software Engineer</span>
-            <span class="role-chip">Data Engineer</span>
-            <span class="role-chip">Data Scientist</span>
-            <span class="role-chip">AI Engineer</span>
-            <span class="role-chip">ML Engineer</span>
-          </div>
         </div>
       </div>
     </div>
@@ -1069,6 +1077,25 @@
     <div class="section-inner">
       <p class="section-label">TIMELINE</p>
       <h2 class="section-title">Experience</h2>
+
+      <div class="exp-item fade-in">
+        <div class="exp-meta">
+          <div class="exp-period">Aug 2026 – Present</div>
+          <div class="exp-location">Remote</div>
+        </div>
+        <div>
+          <div class="exp-role">Volunteer — Website Content Auditor</div>
+          <div class="exp-company">Sustainable Marin Schools</div>
+          <ul class="exp-bullets">
+            <li>Conducting a full inventory and assessment of existing website content ahead of a platform
+              migration off Weebly.</li>
+            <li>Identifying inconsistencies in tone and messaging accumulated across years of updates, and
+              recommending a consistent content structure.</li>
+            <li>Delivering content recommendations aligned to the organization's mission and communication goals
+              to strengthen donor and volunteer support.</li>
+          </ul>
+        </div>
+      </div>
 
       <div class="exp-item fade-in">
         <div class="exp-meta">
