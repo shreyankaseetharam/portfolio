@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supply Chain Delivery &amp; Profitability Analysis | Shreyanka Seetharam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Roboto+Mono:wght@400;500&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#f1f0ea; --surface:#e0ddcf; --border:#c9c4b8; --ink:#2d232e; --muted:#534b52; --red:#B3402C; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body { background:var(--bg); color:var(--ink); font-family:Manrope,sans-serif; line-height:1.7; }
+    nav { position:sticky; top:0; z-index:5; display:flex; justify-content:space-between; align-items:center; padding:1rem max(1.5rem, calc((100% - 1100px)/2)); background:rgba(241,240,234,.94); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+    nav a { color:var(--ink); text-decoration:none; font:500 .72rem 'Roboto Mono',monospace; letter-spacing:.06em; text-transform:uppercase; }
+    .nav-links { display:flex; gap:1.25rem; list-style:none; flex-wrap:wrap; justify-content:flex-end; }
+    main { max-width:1100px; margin:auto; padding:5rem 1.5rem 7rem; }
+    .back { display:inline-block; margin-bottom:3rem; color:var(--muted); text-decoration:none; font:.72rem 'Roboto Mono',monospace; text-transform:uppercase; letter-spacing:.08em; }
+    .eyebrow { color:var(--red); font:500 .72rem 'Roboto Mono',monospace; letter-spacing:.15em; text-transform:uppercase; margin-bottom:1rem; }
+    h1,h2,h3 { font-family:'Playfair Display',serif; line-height:1.15; }
+    h1 { max-width:800px; font-size:clamp(2.7rem,7vw,5.4rem); margin-bottom:1.5rem; }
+    .lede { max-width:760px; color:var(--muted); font-size:1.1rem; }
+    .actions { display:flex; gap:.75rem; flex-wrap:wrap; margin-top:2rem; }
+    .button { display:inline-block; padding:.7rem 1rem; border:1px solid var(--ink); color:var(--ink); text-decoration:none; font:500 .72rem 'Roboto Mono',monospace; text-transform:uppercase; letter-spacing:.06em; }
+    .button.primary { background:var(--ink); color:var(--bg); }
+    .meta-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin:4rem 0; background:var(--border); border:1px solid var(--border); }
+    .meta { background:var(--surface); padding:1.2rem; }
+    .meta-label { display:block; color:var(--muted); font:500 .65rem 'Roboto Mono',monospace; letter-spacing:.1em; text-transform:uppercase; margin-bottom:.35rem; }
+    .meta-value { font-weight:600; }
+    section { border-top:1px solid var(--border); padding:4.5rem 0; }
+    section h2 { font-size:clamp(2rem,4vw,3rem); margin-bottom:1.5rem; }
+    section h3 { font-size:1.5rem; margin:2rem 0 .75rem; }
+    p { max-width:760px; margin-bottom:1rem; }
+    ul { max-width:760px; padding-left:1.2rem; }
+    li { margin:.5rem 0; }
+    .callout { background:var(--surface); border-left:3px solid var(--red); padding:1.4rem 1.5rem; margin:1.5rem 0; max-width:800px; }
+    .results { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:2rem; }
+    .result { background:var(--surface); border:1px solid var(--border); padding:1.25rem; }
+    .result strong { display:block; font:600 2rem 'Playfair Display',serif; }
+    .result span { color:var(--muted); font-size:.82rem; }
+    table { width:100%; border-collapse:collapse; margin:1.5rem 0; background:var(--surface); }
+    th,td { text-align:left; padding:.8rem; border-bottom:1px solid var(--border); }
+    th { font:500 .68rem 'Roboto Mono',monospace; text-transform:uppercase; letter-spacing:.06em; }
+    td { font-size:.88rem; }
+    .note { color:var(--muted); font-size:.85rem; }
+    footer { border-top:1px solid var(--border); padding:2rem 1.5rem; text-align:center; color:var(--muted); font-size:.85rem; }
+    @media(max-width:760px) { .meta-grid,.results { grid-template-columns:repeat(2,1fr); } .nav-links { gap:.6rem; } }
+    @media(max-width:450px) { .meta-grid,.results { grid-template-columns:1fr; } }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <a href="index.html" aria-label="Back to Shreyanka Seetharam's homepage">SS</a>
+    <ul class="nav-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#method">Method</a></li>
+      <li><a href="#findings">Findings</a></li>
+      <li><a href="index.html#projects">All projects</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <a class="back" href="index.html#projects">&larr; Back to projects</a>
+    <header>
+      <p class="eyebrow">Case study · Data analytics · Supply chain</p>
+      <h1>Supply Chain Delivery &amp; Profitability Analysis</h1>
+      <p class="lede">An order-level analysis of delivery reliability and profitability designed to answer a practical operations question: where are delays happening, and which shipping choices or markets deserve attention?</p>
+      <div class="actions">
+        <a class="button primary" href="https://github.com/shreyankaseetharam/dataco-supply-chain-analysis" target="_blank" rel="noopener noreferrer">View GitHub repository ↗</a>
+        <a class="button" href="index.html#contact">Contact me</a>
+      </div>
+    </header>
+
+    <div class="meta-grid">
+      <div class="meta"><span class="meta-label">Dataset</span><span class="meta-value">DataCo Smart Supply Chain</span></div>
+      <div class="meta"><span class="meta-label">Records</span><span class="meta-value">180,519 line items</span></div>
+      <div class="meta"><span class="meta-label">Analytical unit</span><span class="meta-value">65,752 orders</span></div>
+      <div class="meta"><span class="meta-label">Tools</span><span class="meta-value">Python · SQL · DuckDB</span></div>
+    </div>
+
+    <section id="overview">
+      <p class="eyebrow">01 · Overview</p>
+      <h2>The business question</h2>
+      <p>Supply-chain performance is not only a delivery problem. A shipping mode can affect customer experience, operating reliability, and the profit generated by an order at the same time.</p>
+      <p>This project evaluates those relationships across shipping modes, markets, regions, departments, categories, and customer segments. The goal is to give an operations team a concise view of where late deliveries and weak profitability overlap.</p>
+      <div class="callout"><strong>Key modeling decision:</strong> the source data contains one row per product line. Because one order can contain multiple products, counting source rows would overstate the number of orders. I created an order-level analytical table before calculating order-level rates and averages.</div>
+    </section>
+
+    <section id="method">
+      <p class="eyebrow">02 · Method</p>
+      <h2>How the analysis was built</h2>
+      <h3>Data preparation</h3>
+      <ul>
+        <li>Loaded and audited the DataCo Smart Supply Chain dataset.</li>
+        <li>Parsed order and shipping timestamps and derived shipping delay measures.</li>
+        <li>Grouped line items by Order Id to create one consistent record per order.</li>
+        <li>Validated that order-level status, delivery status, and late-risk values were consistent within each order.</li>
+      </ul>
+      <h3>Analysis</h3>
+      <ul>
+        <li>Measured late-delivery rate, average shipping delay, profit, and loss-making order rate.</li>
+        <li>Compared operational performance by shipping mode, market, and order region.</li>
+        <li>Used SQL queries in DuckDB to produce reusable summary tables.</li>
+        <li>Created focused visualizations to compare reliability and profitability rather than producing a collection of disconnected charts.</li>
+      </ul>
+    </section>
+
+    <section id="findings">
+      <p class="eyebrow">03 · Findings</p>
+      <h2>What the data showed</h2>
+      <div class="results">
+        <div class="result"><strong>57.3%</strong><span>late-delivery rate among operational orders</span></div>
+        <div class="result"><strong>18.8%</strong><span>loss-making order rate</span></div>
+        <div class="result"><strong>$1.39M</strong><span>total order profit in the analytical table</span></div>
+        <div class="result"><strong>65,752</strong><span>unique orders analyzed</span></div>
+      </div>
+      <h3>Shipping-mode comparison</h3>
+      <table>
+        <thead><tr><th>Shipping mode</th><th>Orders</th><th>Late rate</th><th>Average profit</th></tr></thead>
+        <tbody>
+          <tr><td>First Class</td><td>9,602</td><td>100.0%</td><td>$22.82</td></tr>
+          <tr><td>Second Class</td><td>12,256</td><td>80.0%</td><td>$19.78</td></tr>
+          <tr><td>Same Day</td><td>3,407</td><td>48.4%</td><td>$18.45</td></tr>
+          <tr><td>Standard Class</td><td>37,632</td><td>39.8%</td><td>$21.44</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Interpretation:</strong> Standard Class had the lowest late rate among the four modes in this dataset, while First Class had the highest. That pattern is worth investigating before assuming that a faster service label automatically produces better operational performance.</p>
+      <p class="note">The findings are descriptive, not causal. Shipping-mode selection may be influenced by destination, product, customer, or order characteristics that are not controlled for in this analysis.</p>
+    </section>
+
+    <section>
+      <p class="eyebrow">04 · Reflection</p>
+      <h2>What I learned</h2>
+      <p>The most important lesson was that the analytical unit matters as much as the chart. Building the order-level table first prevented line-item duplication from distorting the business metrics.</p>
+      <p>The next iteration would add a dashboard layer, investigate possible drivers of late delivery, and test whether the observed shipping-mode differences remain after controlling for geography and product mix.</p>
+    </section>
+  </main>
+
+  <footer>Shreyanka Seetharam · Data analytics portfolio</footer>
+</body>
+</html>
