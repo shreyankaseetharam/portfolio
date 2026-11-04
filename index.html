@@ -110,12 +110,7 @@
 
     /* HERO TESTIMONIAL */
     .hero-right {
-      background: #B3402C;
-      display: flex;
-      align-items: center;
-      padding: 8rem 4rem 4rem;
-      margin: 0;
-      border-radius: 0;
+      display: none;
     }
 
     .quote-card {
@@ -206,6 +201,108 @@
       border-radius: 2px;
     }
 
+    /* TESTIMONIAL CAROUSEL */
+    .testimonials-section {
+      background: #B3402C;
+      color: #FDEDE7;
+    }
+
+    .testimonials-section .section-inner {
+      max-width: 1000px;
+      padding-top: 5.5rem;
+      padding-bottom: 5.5rem;
+    }
+
+    .testimonials-section .section-label,
+    .testimonials-section .section-title {
+      color: #FFF8F5;
+    }
+
+    .testimonial-carousel {
+      position: relative;
+    }
+
+    .testimonial-slide {
+      display: none;
+      max-width: 760px;
+    }
+
+    .testimonial-slide.is-active {
+      display: block;
+      animation: testimonial-fade 0.35s ease;
+    }
+
+    @keyframes testimonial-fade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .testimonial-slide blockquote {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.35rem, 2.4vw, 2rem);
+      line-height: 1.45;
+      margin-bottom: 1.6rem;
+    }
+
+    .testimonial-slide figcaption {
+      border-top: 1px solid rgba(253, 237, 231, 0.35);
+      padding-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .testimonial-name {
+      font-weight: 600;
+      color: #FFF8F5;
+    }
+
+    .testimonial-role {
+      font-size: 0.85rem;
+      color: #FDEDE7;
+    }
+
+    .testimonial-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .testimonial-button {
+      border: 1px solid rgba(255, 248, 245, 0.5);
+      background: transparent;
+      color: #FFF8F5;
+      width: 2.3rem;
+      height: 2.3rem;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .testimonial-button:hover,
+    .testimonial-button:focus-visible {
+      background: rgba(255, 248, 245, 0.15);
+    }
+
+    .testimonial-dots {
+      display: flex;
+      gap: 0.45rem;
+    }
+
+    .testimonial-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 248, 245, 0.45);
+      cursor: pointer;
+    }
+
+    .testimonial-dot.is-active {
+      background: #FFF8F5;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .quote-link {
         transition: none;
@@ -218,7 +315,7 @@
 
     /* HERO */
     #hero {
-      min-height: 100vh;
+      min-height: auto;
       display: flex;
       align-items: stretch;
       padding: 0;
@@ -228,21 +325,23 @@
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 0;
       align-items: stretch;
       width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     .hero-left {
       align-self: center;
-      justify-self: end;
+      justify-self: stretch;
       width: 100%;
-      max-width: 40rem;
+      max-width: none;
       padding: 8rem 4rem 4rem;
     }
 
-    .hero-left h3 {
+    .hero-left h1 {
       font-family: 'Playfair Display', serif;
       font-size: 2.5rem;
       line-height: 1.05;
@@ -877,7 +976,7 @@
 
     @media (max-width: 1200px) {
       .hero-grid {
-        grid-template-columns: 1fr;
+      grid-template-columns: 1fr;
       }
 
       .hero-left {
@@ -886,13 +985,7 @@
         padding: 7rem 2.5rem 3rem;
       }
 
-      .hero-right {
-        padding: 3.5rem 2.5rem 4rem;
-      }
-
-      .quote-card {
-        max-width: 34rem;
-      }
+      .hero-right { display: none; }
     }
 
     @media (max-width: 768px) {
@@ -1277,17 +1370,7 @@
         padding-top: 5rem;
       }
 
-      .hero-right {
-        padding: 2.75rem 1.5rem 3.25rem;
-      }
-
-      .quote-card {
-        gap: 1.25rem;
-      }
-
-      .quote-mark {
-        font-size: 3rem;
-      }
+      .hero-right { display: none; }
 
       .section-inner {
         padding: 4rem 1.5rem;
@@ -1333,10 +1416,9 @@
     <div class="nav-logo">SS</div>
     <ul class="nav-links">
       <li><a href="#projects">Projects</a></li>
-      <li><a href="#skills">Skills</a></li>
       <li><a href="#experience">Experience</a></li>
-      <li><a href="#education">Education</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li><a href="resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a></li>
     </ul>
   </nav>
 
@@ -1344,47 +1426,19 @@
   <section id="hero">
     <div class="hero-grid">
       <div class="hero-left fade-in">
-        <h3>Hi! I'm Shreyanka.</h3>
+        <h1>Hi! I'm Shreyanka.</h1>
         <p class="hero-tagline">
-          A frontend developer with 4+ years of industry experience designing, building, and maintaining web applications, plus 2 years of volunteer experience delivering user interface projects. 
+        M.S. Applied Data Intelligence student transitioning into data analytics and data engineering, with 4+ years of software development experience.        
         </p>
-        <p class="hero-tagline">
-          Currently pursuing an M.S. in Applied Data Intelligence at San Jose State University and transitioning into data analytics and engineering.
-        </p>
-        <p class="project-wip-note">* Authorized to work in the U.S. with an H-4 EAD.</p>
-        <p class="project-wip-note">** Seeking Fall 2026 and Summer 2027 internship opportunities.</p>
+        <p class="project-wip-note">Authorized to work in the U.S. with an H-4 EAD; no sponsorship required at this time.</p>
+        <p class="project-wip-note">Open to internship and entry-level opportunities in data analytics, business intelligence, and data engineering.</p>
         <br>
         <div class="hero-links">
-          <a href="mailto:shreyanka.seetharam@sjsu.edu" class="btn btn-primary">Email</a>
-          <a href="https://www.linkedin.com/in/shreyanka-s/" class="btn btn-primary" target="_blank"
-            rel="noopener noreferrer">LinkedIn</a>
+          <a href="#projects" class="btn btn-primary">View projects</a>
+          <a href="#contact" class="btn btn-outline">Contact</a>
         </div>
       </div>
-      <aside class="hero-right fade-in">
-        <figure class="quote-card">
-          <div class="quote-heading">WORKING WITH ME</div>
-          <span class="quote-mark" aria-hidden="true">&rdquo;</span>
-          <blockquote class="quote-text">
-            <p>Shreyanka brings something especially valuable to a project: she doesn't simply complete what is put in front of her. She thinks about it. She asks questions, offers ideas, notices opportunities for improvement, and genuinely cares about whether the final result works. Her input helped shape the design, organization, functionality, and overall experience of our website, and she consistently approached the work with creativity, thoughtfulness, and enthusiasm.
-
-</p>
-            <p> One of the things I appreciated most about working with Shreyanka was how invested she became in the project. She took the time to understand what we were building, why it mattered, and what we wanted people to experience when they encountered our organization online. That understanding showed in her work and in the recommendations she brought to the table.</p>
-          </blockquote>
-          <figcaption class="quote-author">
-            <span class="quote-name">Loxley Browne</span>
-            <span class="quote-role">Founder &amp; CEO, Books That Build Skills</span>
-          </figcaption>
-          <a class="quote-link" href="https://www.linkedin.com/in/shreyanka-s/details/recommendations/"
-            target="_blank" rel="noopener noreferrer">
-            Read the full testimonial
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"
-              xmlns="http://www.w3.org/2000/svg">
-              <path d="M7 17L17 7M17 7H9M17 7V15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-          </a>
-        </figure>
-      </aside>
+    </div>
   </section>
 
   <hr class="divider" />
@@ -1404,14 +1458,14 @@
 
     <a
       class="project-github"
-      href="https://github.com/shreyankaseetharam/semantic-book-recommender"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="View the Semantic Book Recommender project on GitHub"
+      href="semantic-book-recommender.html"
+      aria-label="Read the Semantic Book Recommender case study"
     >
-      View on GitHub ↗
+      Case study ↗
     </a>
   </div>
+
+  <a class="project-github" href="https://github.com/shreyankaseetharam/semantic-book-recommender" target="_blank" rel="noopener noreferrer">GitHub repository ↗</a>
 
   <ul class="project-bullets">
     <li>
@@ -1455,29 +1509,23 @@
         <div class="project-card fade-in">
           <div class="project-category">Data Analytics</div>
           <div class="project-header">
-            <div class="project-title">Retail Sales &amp; Customer Churn Analytics Dashboard</div>
-            <span class="project-github project-wip" aria-disabled="true" title="Repo will be published this month">View Project*</span>
+          <div class="project-title">Supply Chain Delivery &amp; Profitability Analysis</div>
+            <a class="project-github" href="supply-chain-delivery-profitability.html" aria-label="Read the Supply Chain Delivery and Profitability Analysis case study">Case study ↗</a>
           </div>
           <ul class="project-bullets">
-            <li>Cleaned and standardized a 500K+ row retail transactions dataset using Python and SQL, resolving
-              inconsistencies across multiple source files.</li>
-            <li>Designed a relational database schema in PostgreSQL to support scalable querying across sales,
-              customer, and product tables.</li>
-            <li>Built an interactive Tableau dashboard tracking KPIs including monthly revenue trends, customer
-              retention rate, and churn risk by segment.</li>
-            <li>Applied exploratory data analysis and cohort analysis to identify key churn drivers, informing
-              targeted retention recommendations.</li>
-            <li>Automated the recurring data refresh and reporting workflow, cutting manual reporting time by an
-              estimated 70%.</li>
+            <li>Built an order-level analytical dataset from 180,519 product-line records to avoid overstating order counts.</li>
+            <li>Analyzed delivery reliability, shipping modes, regions, product categories, and profitability using Python, SQL, and DuckDB.</li>
+            <li>Found a 57.3% late-delivery rate and an 18.8% loss-making order rate across 65,752 orders.</li>
+            <li>Compared shipping modes and identified a 100% late rate for First Class orders versus 39.8% for Standard Class.</li>
           </ul>
           <div class="project-tags tags">
-            <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Pandas</span><span
-              class="tag">Tableau</span><span class="tag">PostgreSQL</span>
+            <span class="tag">Python</span><span class="tag">Pandas</span><span class="tag">SQL</span><span
+              class="tag">DuckDB</span><span class="tag">Matplotlib</span><span class="tag">Seaborn</span>
           </div>
           <div class="project-metrics">
-            <span class="metric">500K+ rows processed</span><span class="metric">~70% less manual reporting</span>
+            <span class="metric">65,752 orders</span><span class="metric">57.3% late delivery rate</span>
           </div>
-          <p class="project-wip-note">* Work in progress — repo will be published this month. Stay tuned!</p>
+          <a class="project-github" href="https://github.com/shreyankaseetharam/dataco-supply-chain-analysis" target="_blank" rel="noopener noreferrer">GitHub repository ↗</a>
         </div>
 
       </div>
@@ -1638,10 +1686,10 @@
       <div class="exp-item edu-item fade-in">
         <div class="exp-meta">
           <div class="exp-period">Aug 2024 – May 2026</div>
-          <div class="exp-location">San Jose, CA</div>
+          <div class="exp-location">San José, CA</div>
         </div>
         <div>
-          <div class="exp-role">San Jose State University</div>
+          <div class="exp-role">San José State University</div>
           <div class="exp-company">Master of Science in Applied Data Intelligence</div>
           <!-- <p class="edu-courses"></p> -->
           <p class="edu-courses">Semester 1 Coursework: Python for Computer Programming, Math for Data Intelligence, Database Technology for Data Intelligence</p>
@@ -1688,12 +1736,44 @@
           <div class="exp-location">Mysore, India</div>
         </div>
         <div>
-          <div class="exp-role">The National Insitute of Engineering</div>
+          <div class="exp-role">The National Institute of Engineering</div>
           <div class="exp-company">Bachelor of Engineering in Information Science and Engineering</div>
           <p class="edu-courses">Courses: Database Management Systems, Software Engineering, Cloud Computing, Artificial Intelligence, Microprocessors</p>
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials" class="testimonials-section" aria-labelledby="testimonials-heading">
+    <div class="section-inner">
+      <p class="section-label">WORKING WITH ME</p>
+      <h2 class="section-title" id="testimonials-heading">What collaborators say</h2>
+
+      <div class="testimonial-carousel" aria-live="polite">
+        <!-- Add additional testimonial-slide figures here as you receive more recommendations. -->
+        <figure class="testimonial-slide is-active">
+          <blockquote>
+            “Shreyanka brings something especially valuable to a project: she doesn't simply complete what is put in front of her. She thinks about it, asks questions, offers ideas, notices opportunities for improvement, and genuinely cares about whether the final result works.”
+          </blockquote>
+          <figcaption>
+            <span class="testimonial-name">Loxley Browne</span>
+            <span class="testimonial-role">Founder &amp; CEO, Books That Build Skills</span>
+            <a class="quote-link" href="https://www.linkedin.com/in/shreyanka-s/details/recommendations/" target="_blank" rel="noopener noreferrer">Read the full testimonial ↗</a>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="testimonial-controls" aria-label="Testimonial controls">
+        <button class="testimonial-button" type="button" data-testimonial-prev aria-label="Previous testimonial">&#8592;</button>
+        <div class="testimonial-dots" role="tablist" aria-label="Choose a testimonial">
+          <button class="testimonial-dot is-active" type="button" role="tab" aria-selected="true" aria-label="Testimonial 1" data-testimonial-dot="0"></button>
+        </div>
+        <button class="testimonial-button" type="button" data-testimonial-next aria-label="Next testimonial">&#8594;</button>
+      </div>
     </div>
   </section>
 
@@ -1710,9 +1790,7 @@
         <div class="contact-lede">
           <h2 class="section-title" id="contact-heading">Let's connect!</h2>
           <p class="contact-intro">
-              I move between three disciplines I actually care about, writing frontend code, redesigning nonprofit
-              websites end-to-end, and now, applying that same mindset to AI/ML as a graduate student. Right now I'm
-              actively looking for my next AI/ML opportunity — internship, contract, part-time, or full-time.
+              I am an M.S. Applied Data Intelligence student transitioning from frontend development into data analytics and data engineering. I am currently seeking opportunities where I can apply Python, SQL, data analysis, and software engineering skills to practical business problems.
           </p>
 
           <div class="contact-links">
@@ -1813,6 +1891,40 @@
     });
 
     filterProjects('sde');
+
+    // Testimonial carousel. Add more .testimonial-slide figures and dots as recommendations arrive.
+    const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+    const testimonialDots = document.querySelectorAll('.testimonial-dot');
+    let testimonialIndex = 0;
+
+    function showTestimonial(index) {
+      if (!testimonialSlides.length) return;
+      testimonialIndex = (index + testimonialSlides.length) % testimonialSlides.length;
+      testimonialSlides.forEach((slide, i) => {
+        slide.classList.toggle('is-active', i === testimonialIndex);
+      });
+      testimonialDots.forEach((dot, i) => {
+        const active = i === testimonialIndex;
+        dot.classList.toggle('is-active', active);
+        dot.setAttribute('aria-selected', active);
+      });
+    }
+
+    document.querySelector('[data-testimonial-prev]')?.addEventListener('click', () => {
+      showTestimonial(testimonialIndex - 1);
+    });
+
+    document.querySelector('[data-testimonial-next]')?.addEventListener('click', () => {
+      showTestimonial(testimonialIndex + 1);
+    });
+
+    testimonialDots.forEach((dot) => {
+      dot.addEventListener('click', () => showTestimonial(Number(dot.dataset.testimonialDot)));
+    });
+
+    if (testimonialSlides.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      window.setInterval(() => showTestimonial(testimonialIndex + 1), 7000);
+    }
 
     // Highlight active nav tab by current section
     const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
