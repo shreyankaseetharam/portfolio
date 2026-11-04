@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Semantic Book Recommender | Shreyanka Seetharam</title>
+  <meta name="description"
+    content="Case study: an LLM-powered book recommender using semantic search, zero-shot classification and emotional-tone filters." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Roboto+Mono:wght@400;500&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Same design tokens as index.html */
+    :root {
+      --bg: #f1f0ea;
+      --surface: #e0ddcf;
+      --border: #c9c4b8;
+
+      --accent: #2d232e;
+      --accent-hover: #474448;
+      --accent-fill: #534b52;
+      --accent2: #474448;
+
+      --text: #2d232e;
+      --text-secondary: #474448;
+      --muted: #534b52;
+
+      --tag-bg: #f1f0ea;
+      --nav-bg: rgba(241, 240, 234, 0.92);
+      --btn-text: #f1f0ea;
+
+      --hero-red: #B3402C;
+      --timeline-dot: #B79CED;
+
+      --nav-h: 85px;
+      --toc-h: 0px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 18px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      font-weight: 500;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.15;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    /* NAV */
+    nav.site-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4rem;
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Manrope', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      padding: 0.35rem 0.7rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--tag-bg);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Manrope', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      transition: color 0.2s, background-color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+      background: var(--tag-bg);
+    }
+
+    .nav-back {
+      display: none;
+    }
+
+    /* HERO */
+    .case-hero {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-left {
+      align-self: center;
+      justify-self: end;
+      width: 100%;
+      max-width: 40rem;
+      padding: 8rem 4rem 4rem;
+    }
+
+    .hero-back {
+      display: inline-block;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-back:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .project-category {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--accent2);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.7rem;
+    }
+
+    .hero-left h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      text-wrap: balance;
+    }
+
+    .hero-tagline {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 1.6rem;
+      line-height: 1.8;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem 1.5rem;
+      padding: 1.2rem 0;
+      margin-bottom: 1.6rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-meta dt {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.15rem;
+    }
+
+    .hero-meta dd {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.5rem;
+      border-radius: 2px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent-fill);
+      color: var(--btn-text);
+      font-weight: 500;
+    }
+
+    .btn-primary:hover {
+      background: #474448;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero-right {
+      background: var(--hero-red);
+      color: #FDEDE7;
+      display: flex;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+    }
+
+    .glance {
+      max-width: 30rem;
+      width: 100%;
+    }
+
+    .quote-heading {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255, 245, 240, 0.75);
+      margin-bottom: 1.2rem;
+    }
+
+    .glance-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .glance-list dt {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #FFF8F5;
+    }
+
+    .glance-list dd {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      text-wrap: pretty;
+    }
+
+    .glance-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.2rem 1.5rem;
+      padding-top: 1.35rem;
+      border-top: 1px solid rgba(253, 237, 231, 0.28);
+    }
+
+    .glance-value {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      line-height: 1.15;
+      color: #FFF8F5;
+    }
+
+    .glance-label {
+      display: block;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 0.25rem;
+    }
+
+    /* PAGE LAYOUT */
+    .case-layout {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 210px minmax(0, 1fr);
+      gap: 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 4rem;
+    }
+
+    /* SECTION NAVIGATION
+       Desktop: sticky side list. Tablet and phone: sticky swipeable strip. */
+    .toc {
+      position: sticky;
+      top: calc(var(--nav-h) + 2rem);
+      align-self: start;
+      padding: 4rem 0 2rem;
+    }
+
+    .toc-heading {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .toc ol {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      border-left: 1px solid var(--border);
+    }
+
+    .toc a {
+      display: flex;
+      gap: 0.6rem;
+      margin-left: -1px;
+      padding: 0.32rem 0.7rem;
+      border-left: 2px solid transparent;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+    }
+
+    .toc a span {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.68rem;
+      line-height: 1.65;
+    }
+
+    .toc a:hover {
+      color: var(--accent);
+      background: var(--surface);
+    }
+
+    .toc a.active {
+      color: var(--accent);
+      font-weight: 600;
+      border-left-color: var(--hero-red);
+      background: var(--surface);
+    }
+
+    /* CONTENT */
+    .case-content {
+      min-width: 0;
+      padding-bottom: 2rem;
+    }
+
+    .case-section {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--border);
+      scroll-margin-top: calc(var(--nav-h) + var(--toc-h));
+    }
+
+    .case-section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-label {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.7rem, 3.2vw, 2.3rem);
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+      text-wrap: balance;
+    }
+
+    .case-section h3 {
+      font-weight: 600;
+      font-size: 1.05rem;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      color: var(--accent-fill);
+      margin: 2.2rem 0 0.7rem;
+    }
+
+    .case-section p:not([class]) {
+      font-size: 0.92rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      max-width: 68ch;
+      margin-bottom: 1rem;
+      text-wrap: pretty;
+    }
+
+    .case-section a:not(.btn) {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-color: var(--hero-red);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    .case-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      max-width: 68ch;
+    }
+
+    .case-list li {
+      position: relative;
+      padding-left: 1.15rem;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      text-wrap: pretty;
+    }
+
+    .case-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.65em;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--timeline-dot);
+    }
+
+    .pull-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      line-height: 1.45;
+      color: var(--accent);
+      max-width: 34em;
+      margin: 1.8rem 0;
+      padding-left: 1.2rem;
+      border-left: 3px solid var(--hero-red);
+    }
+
+    code {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.86em;
+    }
+
+    /* Draft marker. When every placeholder has been replaced, delete
+       .draft-note from the page and these two rules. */
+    .draft-note {
+      margin-top: 4rem;
+      padding: 0.9rem 1.1rem;
+      background: var(--tag-bg);
+      border: 1px dashed var(--accent-fill);
+      border-radius: 4px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.72rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    .dummy {
+      background: rgba(183, 156, 237, 0.32);
+      border-radius: 2px;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      padding: 0.05em 0.15em;
+    }
+
+    /* IMAGE PLACEHOLDERS */
+    .case-figure {
+      margin: 1.8rem 0;
+    }
+
+    .case-figure img,
+    .case-figure video {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    .img-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      padding: 1.25rem;
+      text-align: center;
+      background: var(--surface);
+      border: 1px dashed var(--accent-fill);
+      border-radius: 4px;
+      color: var(--text-secondary);
+    }
+
+    .img-placeholder.is-wide {
+      aspect-ratio: 21 / 9;
+    }
+
+    .img-placeholder svg {
+      width: 28px;
+      height: 28px;
+      margin-bottom: 0.3rem;
+      color: var(--accent-fill);
+    }
+
+    .ph-kind {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .ph-what {
+      font-size: 0.85rem;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--text);
+      max-width: 34ch;
+      text-wrap: balance;
+    }
+
+    .ph-size {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+
+    .case-figure figcaption {
+      margin-top: 0.6rem;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.68rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .figure-pair {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+      margin: 1.8rem 0;
+    }
+
+    .figure-pair .case-figure {
+      margin: 0;
+    }
+
+    /* STATS */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 1.6rem 0;
+    }
+
+    .stat-tile {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.1rem 1.2rem;
+    }
+
+    .stat-value {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      line-height: 1.15;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      display: block;
+      margin-top: 0.3rem;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.68rem;
+      line-height: 1.5;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* TABLES */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 1.2rem 0 1.8rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+
+    caption {
+      caption-side: bottom;
+      text-align: left;
+      padding: 0.6rem 0.9rem;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    th {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: left;
+      background: var(--surface);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    th,
+    td {
+      padding: 0.6rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    th {
+      color: var(--accent);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    td.num,
+    th.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* CODE */
+    .code-block {
+      overflow-x: auto;
+      margin: 1.2rem 0 0.6rem;
+      padding: 1.1rem 1.25rem;
+      background: var(--accent);
+      color: var(--bg);
+      border-radius: 4px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.74rem;
+      line-height: 1.7;
+    }
+
+    .code-block code {
+      font-size: inherit;
+    }
+
+    .code-note {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    /* PIPELINE: same rail and dots as the Experience timeline */
+    .pipeline {
+      list-style: none;
+      position: relative;
+      margin: 1.6rem 0;
+    }
+
+    .pipeline li {
+      position: relative;
+      padding: 0 0 1.5rem 2rem;
+    }
+
+    .pipeline li::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 0.5rem;
+      bottom: -0.5rem;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .pipeline li:last-child::before {
+      display: none;
+    }
+
+    .pipeline li::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.4rem;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--timeline-dot);
+      box-shadow: 0 0 0 4px var(--bg);
+    }
+
+    .pipeline-step {
+      display: block;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--accent-fill);
+      margin-bottom: 0.2rem;
+    }
+
+    .pipeline-body {
+      display: block;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 66ch;
+    }
+
+    /* CARDS */
+    .decision-card,
+    .column-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.4rem 1.5rem;
+    }
+
+    .decision-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .decision-card h3 {
+      margin: 0 0 0.9rem;
+    }
+
+    .decision-card dl {
+      display: grid;
+      grid-template-columns: 6.2rem minmax(0, 1fr);
+      gap: 0.5rem 1rem;
+    }
+
+    .decision-card dt {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding-top: 0.2rem;
+    }
+
+    .decision-card dd {
+      font-size: 0.86rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      text-wrap: pretty;
+    }
+
+    .two-columns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .column-card h3 {
+      margin: 0 0 0.9rem;
+    }
+
+    /* CLOSING */
+    .case-end {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem;
+      margin: 1rem 0 4rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    .case-end p {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      line-height: 1.3;
+      color: var(--accent);
+    }
+
+    .case-end-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .to-top {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 90;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background: var(--accent-fill);
+      color: var(--btn-text);
+      text-decoration: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s, background-color 0.2s;
+    }
+
+    .to-top.is-visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .to-top:hover {
+      background: #474448;
+    }
+
+    .to-top svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* TABLET: side list becomes a sticky strip */
+    @media (max-width: 1100px) {
+      :root {
+        --toc-h: 56px;
+      }
+
+      .case-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-left {
+        justify-self: stretch;
+        max-width: none;
+        padding: 7rem 2.5rem 3rem;
+      }
+
+      .hero-right {
+        padding: 3.5rem 2.5rem 4rem;
+      }
+
+      .glance {
+        max-width: 40rem;
+      }
+
+      .case-layout {
+        display: block;
+        padding: 0;
+      }
+
+      .toc {
+        top: var(--nav-h);
+        z-index: 50;
+        padding: 0;
+        background: var(--nav-bg);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .toc-heading {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+      }
+
+      .toc ol {
+        flex-direction: row;
+        gap: 0.4rem;
+        height: var(--toc-h);
+        align-items: center;
+        padding: 0 2.5rem;
+        border-left: none;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .toc ol::-webkit-scrollbar {
+        display: none;
+      }
+
+      .toc li {
+        flex: 0 0 auto;
+      }
+
+      .toc a {
+        margin-left: 0;
+        padding: 0.3rem 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        white-space: nowrap;
+        font-size: 0.72rem;
+      }
+
+      .toc a span {
+        display: none;
+      }
+
+      .toc a.active {
+        color: var(--btn-text);
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .case-content {
+        padding: 0 2.5rem 2rem;
+      }
+
+      .draft-note {
+        margin-top: 2.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --nav-h: 77px;
+      }
+
+      nav.site-nav {
+        padding: 1rem 1.5rem;
+      }
+
+      .nav-links li {
+        display: none;
+      }
+
+      .nav-links li.nav-back {
+        display: block;
+      }
+
+      .hero-left {
+        padding: 6.5rem 1.5rem 2.5rem;
+      }
+
+      .hero-left h1 {
+        font-size: 2.1rem;
+      }
+
+      .hero-back {
+        display: none;
+      }
+
+      .hero-right {
+        padding: 2.75rem 1.5rem 3.25rem;
+      }
+
+      .toc ol {
+        padding: 0 1.5rem;
+      }
+
+      .case-content {
+        padding: 0 1.5rem 1rem;
+      }
+
+      .case-section {
+        padding: 3rem 0;
+      }
+
+      .stat-tile:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+      }
+
+      .figure-pair,
+      .two-columns {
+        grid-template-columns: 1fr;
+      }
+
+      .img-placeholder.is-wide {
+        aspect-ratio: 16 / 9;
+      }
+
+      .decision-card dl {
+        grid-template-columns: 1fr;
+        gap: 0.1rem;
+      }
+
+      .decision-card dd {
+        margin-bottom: 0.7rem;
+      }
+
+      .case-end {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .fade-in {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Shared icon for image placeholders -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="icon-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+      stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <circle cx="8.5" cy="9.5" r="1.5" />
+      <path d="M21 15.5 16 11 6 20" />
+    </symbol>
+  </svg>
+
+  <!-- NAV -->
+  <nav class="site-nav" aria-label="Site">
+    <a class="nav-logo" href="index.html" aria-label="Shreyanka Seetharam, home">SS</a>
+    <ul class="nav-links">
+      <li><a href="index.html#projects">Projects</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#education">Education</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+      <li class="nav-back"><a href="index.html#projects">&larr; All projects</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO: what it is, what I did and the outcome, readable in 30 seconds -->
+  <header class="case-hero" id="top">
+    <div class="hero-left fade-in">
+      <a class="hero-back" href="index.html#projects">&larr; All projects</a>
+      <p class="project-category">Case study &middot; AI / Semantic Search</p>
+      <h1>LLM-Powered Semantic Book Recommender</h1>
+      <p class="hero-tagline">
+        A recommender that lets readers describe the book they want in plain language, then narrows the results by
+        category and emotional tone.
+      </p>
+      <dl class="hero-meta">
+        <div>
+          <dt>Role</dt>
+          <dd><span class="dummy">Solo project: data, modeling and interface</span></dd>
+        </div>
+        <div>
+          <dt>Timeline</dt>
+          <dd><span class="dummy">6 weeks, 2026</span></dd>
+        </div>
+        <div>
+          <dt>Stack</dt>
+          <dd>Python, Pandas, LangChain, OpenAI API, Chroma, Transformers, Gradio</dd>
+        </div>
+        <div>
+          <dt>Data</dt>
+          <dd>7k Books with Metadata (Kaggle)</dd>
+        </div>
+      </dl>
+      <div class="hero-links">
+        <a class="btn btn-primary" href="https://github.com/shreyankaseetharam/semantic-book-recommender"
+          target="_blank" rel="noopener noreferrer">View on GitHub &nearr;</a>
+        <a class="btn btn-outline" href="#results">Jump to results</a>
+      </div>
+    </div>
+
+    <aside class="hero-right fade-in" aria-label="Project at a glance">
+      <div class="glance">
+        <p class="quote-heading">At a glance</p>
+        <dl class="glance-list">
+          <div>
+            <dt>Problem</dt>
+            <dd>Keyword search works when you know the title. It helps far less when you only know the kind of story
+              you want.</dd>
+          </div>
+          <div>
+            <dt>Approach</dt>
+            <dd>Indexed book descriptions as embeddings in Chroma, then added category and emotional-tone filters on
+              top of semantic search.</dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>A Gradio app that retrieves 50 semantic candidates and displays up to 16 recommendations.</dd>
+          </div>
+        </dl>
+        <div class="glance-stats">
+          <div>
+            <span class="glance-value">5,197</span>
+            <span class="glance-label">Books indexed</span>
+          </div>
+          <div>
+            <span class="glance-value">77.83%</span>
+            <span class="glance-label">Classification accuracy</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </header>
+
+  <div class="case-layout">
+
+    <!-- SECTION NAVIGATION: add or remove a link here when you add or remove a section -->
+    <nav class="toc" aria-label="On this page">
+      <p class="toc-heading">On this page</p>
+      <ol>
+        <li><a href="#overview"><span>01</span>Overview</a></li>
+        <li><a href="#problem"><span>02</span>Problem</a></li>
+        <li><a href="#data"><span>03</span>Data</a></li>
+        <li><a href="#approach"><span>04</span>Approach</a></li>
+        <li><a href="#decisions"><span>05</span>Key decisions</a></li>
+        <li><a href="#results"><span>06</span>Results</a></li>
+        <li><a href="#demo"><span>07</span>Demo</a></li>
+        <li><a href="#limitations"><span>08</span>Limits &amp; next steps</a></li>
+        <li><a href="#learned"><span>09</span>What I learned</a></li>
+      </ol>
+    </nav>
+
+    <main class="case-content">
+
+      <!-- DRAFT NOTE: delete this block when all placeholder copy has been replaced -->
+      <p class="draft-note">
+        Draft: <span class="dummy">highlighted text</span> is placeholder copy, and dashed boxes are image
+        placeholders. Replace both before sharing this page.
+      </p>
+
+      <!-- 01 OVERVIEW -->
+      <section class="case-section" id="overview">
+        <p class="section-label">01 / Overview</p>
+        <h2 class="section-title">Search for a book the way you would describe it to a friend</h2>
+        <p>
+          This project turns a public book dataset into a recommender that understands meaning rather than exact
+          keywords. A reader types a description, the app finds books with similar descriptions, and filters refine the
+          results by category and emotional tone.
+        </p>
+        <figure class="case-figure">
+          <!-- IMAGE: replace this div with
+               <img src="images/book-recommender/app-overview.png" alt="Describe what the screenshot shows"> -->
+          <div class="img-placeholder" role="img" aria-label="Image placeholder: finished Gradio app with search results">
+            <svg aria-hidden="true"><use href="#icon-image"></use></svg>
+            <span class="ph-kind">Image placeholder</span>
+            <span class="ph-what">Finished Gradio app showing a search and its results</span>
+            <span class="ph-size">1600 &times; 900 px</span>
+          </div>
+          <figcaption>Figure 1. The recommender interface, with a natural-language query and matching books.</figcaption>
+        </figure>
+      </section>
+
+      <!-- 02 PROBLEM -->
+      <section class="case-section" id="problem">
+        <p class="section-label">02 / Problem</p>
+        <h2 class="section-title">Readers can describe a book long before they can name one</h2>
+        <p>
+          Title and genre search assume a reader already knows what to look for.
+          <span class="dummy">I wanted to serve the more common situation: someone who knows the mood or theme they are
+            after, but has no title in mind and gets little from a broad category like Fiction.</span>
+        </p>
+        <p class="pull-quote">
+          How might a reader find their next book using only a description of what they feel like reading?
+        </p>
+        <h3>What success looked like</h3>
+        <ul class="case-list">
+          <li>A reader can search with a natural-language description instead of keywords.</li>
+          <li>Results can be narrowed by a clean, simple set of categories.</li>
+          <li>Results can also be filtered by emotional tone.</li>
+          <li>Everything is usable through a simple web interface, with no setup for the reader.</li>
+        </ul>
+      </section>
+
+      <!-- 03 DATA -->
+      <section class="case-section" id="data">
+        <p class="section-label">03 / Data</p>
+        <h2 class="section-title">Cleaning for search quality kept 5,197 of 6,810 books</h2>
+        <p>
+          I used the
+          <a href="https://www.kaggle.com/datasets/dylanjcastillo/7k-books-with-metadata" target="_blank"
+            rel="noopener noreferrer">7k Books with Metadata</a> dataset, published on Kaggle by Dylan Castillo. It has
+          6,810 rows, 12 columns and no duplicate ISBNs. Because semantic search depends on the description text, I
+          treated description quality as the main constraint.
+        </p>
+
+        <div class="stat-grid">
+          <div class="stat-tile">
+            <span class="stat-value">6,810</span>
+            <span class="stat-label">Raw records</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-value">1,613</span>
+            <span class="stat-label">Removed (23.7%)</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-value">5,197</span>
+            <span class="stat-label">Analysis-ready records</span>
+          </div>
+        </div>
+
+        <h3>What the raw data looked like</h3>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Missing values by column">
+          <table>
+            <caption>Top missing fields in the raw dataset, from the exploratory notebook.</caption>
+            <thead>
+              <tr>
+                <th scope="col">Column</th>
+                <th scope="col" class="num">Missing</th>
+                <th scope="col" class="num">Share</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>subtitle</td><td class="num">4,429</td><td class="num">65.04%</td></tr>
+              <tr><td>thumbnail</td><td class="num">329</td><td class="num">4.83%</td></tr>
+              <tr><td>description</td><td class="num">262</td><td class="num">3.85%</td></tr>
+              <tr><td>categories</td><td class="num">99</td><td class="num">1.45%</td></tr>
+              <tr><td>authors</td><td class="num">72</td><td class="num">1.06%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <figure class="case-figure">
+          <!-- IMAGE: export this chart from notebooks/data_exploration.ipynb -->
+          <div class="img-placeholder is-wide" role="img" aria-label="Image placeholder: description length distribution chart">
+            <svg aria-hidden="true"><use href="#icon-image"></use></svg>
+            <span class="ph-kind">Chart placeholder</span>
+            <span class="ph-what">Distribution of book description lengths</span>
+            <span class="ph-size">From data_exploration.ipynb &middot; 1600 &times; 685 px</span>
+          </div>
+          <figcaption>Figure 2. Description lengths vary widely, which led to a minimum length rule.</figcaption>
+        </figure>
+
+        <h3>How I cleaned it</h3>
+        <ul class="case-list">
+          <li>Removed records missing the ISBN-13, title, description, publication year, rating or page count.</li>
+          <li>Normalized extra spaces and line breaks in descriptions.</li>
+          <li>Kept descriptions of at least 25 words, since shorter ones give embeddings too little context.</li>
+          <li>Combined titles and subtitles into a single display field.</li>
+          <li>Added automated checks for empty output, missing values, short descriptions and duplicate ISBNs.</li>
+        </ul>
+
+        <h3>Linking search results back to the data</h3>
+        <p>
+          Each description is prefixed with its ISBN-13, so any search result can be connected to the correct row.
+        </p>
+        <pre class="code-block" tabindex="0"><code>cleaned_books["tagged_description"] = (
+    cleaned_books["isbn13"]
+    + " "
+    + cleaned_books["description"]
+)</code></pre>
+        <p class="code-note">
+          From <a href="https://github.com/shreyankaseetharam/semantic-book-recommender/blob/main/src/data_cleaning.py"
+            target="_blank" rel="noopener noreferrer">src/data_cleaning.py</a>
+        </p>
+      </section>
+
+      <!-- 04 APPROACH -->
+      <section class="case-section" id="approach">
+        <p class="section-label">04 / Approach</p>
+        <h2 class="section-title">Semantic search first, then filters that refine the results</h2>
+        <p>The system has five stages, from raw records to the interface a reader uses.</p>
+
+        <ol class="pipeline">
+          <li>
+            <span class="pipeline-step">Clean the records</span>
+            <span class="pipeline-body">Pandas filters incomplete metadata and short descriptions, producing 5,197
+              records.</span>
+          </li>
+          <li>
+            <span class="pipeline-step">Embed and index</span>
+            <span class="pipeline-body">Cleaned descriptions become semantic embeddings, indexed in Chroma to support
+              natural-language similarity search.</span>
+          </li>
+          <li>
+            <span class="pipeline-step">Assign categories</span>
+            <span class="pipeline-body">BART-large-MNLI zero-shot classification categorizes 1,454 previously unlabeled
+              books.</span>
+          </li>
+          <li>
+            <span class="pipeline-step">Score emotional tone</span>
+            <span class="pipeline-body"><span class="dummy">A Hugging Face emotion model scores each description, so
+                results can be filtered by tones such as joyful, suspenseful or sad.</span></span>
+          </li>
+          <li>
+            <span class="pipeline-step">Retrieve and display</span>
+            <span class="pipeline-body">A Gradio interface retrieves 50 semantic candidates and displays up to 16
+              recommendations using the category and tone filters.</span>
+          </li>
+        </ol>
+
+        <figure class="case-figure">
+          <!-- IMAGE: replace this div with
+               <img src="images/book-recommender/architecture.png" alt="Describe the system diagram"> -->
+          <div class="img-placeholder is-wide" role="img" aria-label="Image placeholder: system architecture diagram">
+            <svg aria-hidden="true"><use href="#icon-image"></use></svg>
+            <span class="ph-kind">Diagram placeholder</span>
+            <span class="ph-what">Architecture: query, embeddings, Chroma, filters, Gradio</span>
+            <span class="ph-size">1600 &times; 685 px</span>
+          </div>
+          <figcaption>Figure 3. How a query moves through the system.</figcaption>
+        </figure>
+      </section>
+
+      <!-- 05 DECISIONS -->
+      <section class="case-section" id="decisions">
+        <p class="section-label">05 / Key decisions</p>
+        <h2 class="section-title">Three choices that shaped the system</h2>
+        <p>
+          <span class="dummy">Each of these had a real alternative. Here is what I chose, what I gave up and why.</span>
+        </p>
+
+        <div class="decision-list">
+          <article class="decision-card">
+            <h3>Minimum description length</h3>
+            <dl>
+              <dt>Chose</dt>
+              <dd>Keep only descriptions of 25 words or more.</dd>
+              <dt>Alternative</dt>
+              <dd><span class="dummy">Keep every book with any description, which would have offered a larger
+                  catalog.</span></dd>
+              <dt>Why</dt>
+              <dd>Short descriptions do not provide enough context for useful embeddings. <span class="dummy">A smaller
+                  catalog with better matches was the better trade.</span></dd>
+            </dl>
+          </article>
+
+          <article class="decision-card">
+            <h3>Zero-shot classification for missing categories</h3>
+            <dl>
+              <dt>Chose</dt>
+              <dd>BART-large-MNLI, evaluated on 600 labeled descriptions before use.</dd>
+              <dt>Alternative</dt>
+              <dd><span class="dummy">Train a custom classifier, or leave uncategorized books out of filtered
+                  results.</span></dd>
+              <dt>Why</dt>
+              <dd><span class="dummy">It needed no training pipeline and kept unlabeled books discoverable, and the
+                  labeled sample let me measure its accuracy first.</span></dd>
+            </dl>
+          </article>
+
+          <article class="decision-card">
+            <h3>Retrieve 50, display up to 16</h3>
+            <dl>
+              <dt>Chose</dt>
+              <dd>Fetch a wider candidate pool, then filter it down for display.</dd>
+              <dt>Alternative</dt>
+              <dd><span class="dummy">Retrieve only the 16 closest matches and apply filters to those.</span></dd>
+              <dt>Why</dt>
+              <dd><span class="dummy">A strict filter could otherwise leave a reader with only a few results. The larger
+                  pool leaves room to filter.</span></dd>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <!-- 06 RESULTS -->
+      <section class="case-section" id="results">
+        <p class="section-label">06 / Results</p>
+        <h2 class="section-title">The classifier reached 77.83% accuracy on labeled data</h2>
+        <p>
+          I tested zero-shot classification on 600 labeled descriptions before applying it to books with no category.
+        </p>
+
+        <div class="stat-grid">
+          <div class="stat-tile">
+            <span class="stat-value">5,197</span>
+            <span class="stat-label">Books indexed</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-value">77.83%</span>
+            <span class="stat-label">Accuracy on 600 labeled descriptions</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-value">1,454</span>
+            <span class="stat-label">Books newly categorized</span>
+          </div>
+        </div>
+
+        <figure class="case-figure">
+          <!-- IMAGE: replace this div with
+               <img src="images/book-recommender/confusion-matrix.png" alt="Describe where the classifier was right and wrong"> -->
+          <div class="img-placeholder is-wide" role="img" aria-label="Image placeholder: classifier confusion matrix">
+            <svg aria-hidden="true"><use href="#icon-image"></use></svg>
+            <span class="ph-kind">Chart placeholder</span>
+            <span class="ph-what">Confusion matrix for the zero-shot classifier</span>
+            <span class="ph-size">1600 &times; 685 px</span>
+          </div>
+          <figcaption>Figure 4. Where the classifier was right and where it confused categories.</figcaption>
+        </figure>
+
+        <h3>Sample searches</h3>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Sample searches">
+          <table>
+            <caption><span class="dummy">Sample rows. Replace with real queries and outputs from the app.</span></caption>
+            <thead>
+              <tr>
+                <th scope="col">Query</th>
+                <th scope="col">Filter</th>
+                <th scope="col">Top result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="dummy">A quiet story about faith, family and memory</span></td>
+                <td><span class="dummy">Fiction / Sad</span></td>
+                <td><span class="dummy">Gilead</span></td>
+              </tr>
+              <tr>
+                <td><span class="dummy">An ambitious young lawyer caught up with the mob</span></td>
+                <td><span class="dummy">Fiction / Suspenseful</span></td>
+                <td><span class="dummy">Rage of Angels</span></td>
+              </tr>
+              <tr>
+                <td><span class="dummy">An epic fantasy about a reluctant hero at sea</span></td>
+                <td><span class="dummy">Fiction / Any tone</span></td>
+                <td><span class="dummy">The One Tree</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 07 DEMO -->
+      <section class="case-section" id="demo">
+        <p class="section-label">07 / Demo</p>
+        <h2 class="section-title">See it in action</h2>
+        <figure class="case-figure">
+          <!-- VIDEO OR GIF: replace this div with
+               <video src="images/book-recommender/demo.mp4" controls></video> -->
+          <div class="img-placeholder" role="img" aria-label="Video placeholder: short walkthrough of the app">
+            <svg aria-hidden="true"><use href="#icon-image"></use></svg>
+            <span class="ph-kind">Video or GIF placeholder</span>
+            <span class="ph-what">30-second walkthrough: search, filter, review results</span>
+            <span class="ph-size">1600 &times; 900 px &middot; Under 10 MB</span>
+          </div>
+          <figcaption>Figure 5. From a plain-language query to filtered recommendations.</figcaption>
+        </figure>
+        <div class="figure-pair">
+          <figure class="case-figure">
+            <div class="img-placeholder" role="img" aria-label="Image placeholder: category filter screenshot">
+              <svg aria-hidden="true"><use href="#icon-image"></use></svg>
+              <span class="ph-kind">Image placeholder</span>
+              <span class="ph-what">Category filter applied</span>
+              <span class="ph-size">800 &times; 450 px</span>
+            </div>
+            <figcaption>Figure 6. Narrowing results by category.</figcaption>
+          </figure>
+          <figure class="case-figure">
+            <div class="img-placeholder" role="img" aria-label="Image placeholder: emotional tone filter screenshot">
+              <svg aria-hidden="true"><use href="#icon-image"></use></svg>
+              <span class="ph-kind">Image placeholder</span>
+              <span class="ph-what">Emotional-tone filter applied</span>
+              <span class="ph-size">800 &times; 450 px</span>
+            </div>
+            <figcaption>Figure 7. Changing the results by tone.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 08 LIMITATIONS -->
+      <section class="case-section" id="limitations">
+        <p class="section-label">08 / Limits &amp; next steps</p>
+        <h2 class="section-title">What this version does not do yet</h2>
+        <div class="two-columns">
+          <div class="column-card">
+            <h3>Current limitations</h3>
+            <ul class="case-list">
+              <li>At 77.83% accuracy, about 22% of the sampled descriptions were misclassified, so some inferred
+                categories will be wrong.</li>
+              <li>The catalog is limited to the 5,197 books that passed cleaning.</li>
+              <li><span class="dummy">Recommendation relevance has not been tested with real readers.</span></li>
+              <li><span class="dummy">Results reflect description text only, not reader ratings or reading
+                  history.</span></li>
+            </ul>
+          </div>
+          <div class="column-card">
+            <h3>What I would do next</h3>
+            <ul class="case-list">
+              <li><span class="dummy">Measure retrieval quality with a hand-labeled query set and precision@k.</span></li>
+              <li><span class="dummy">Combine semantic and keyword search, so exact titles and authors also work
+                  well.</span></li>
+              <li><span class="dummy">Use average ratings as a ranking signal.</span></li>
+              <li><span class="dummy">Deploy a public demo and collect feedback from readers.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 09 LEARNED -->
+      <section class="case-section" id="learned">
+        <p class="section-label">09 / What I learned</p>
+        <h2 class="section-title">Most of the quality came before the model</h2>
+        <ul class="case-list">
+          <li><span class="dummy"><strong>Data decisions are product decisions.</strong> The 25-word rule directly
+              changed which books a reader could discover.</span></li>
+          <li><span class="dummy"><strong>Measure before you trust a model.</strong> Testing on labeled data first told
+              me how much weight the inferred categories could carry.</span></li>
+          <li><span class="dummy"><strong>My frontend background still matters.</strong> Thinking about how a reader
+              would use the filters shaped how I designed the pipeline behind them.</span></li>
+        </ul>
+      </section>
+
+      <div class="case-end">
+        <p>Want to talk about this project?</p>
+        <div class="case-end-links">
+          <a class="btn btn-primary" href="mailto:shreyanka.seetharam@sjsu.edu">Email</a>
+          <a class="btn btn-outline" href="https://www.linkedin.com/in/shreyanka-s/" target="_blank"
+            rel="noopener noreferrer">LinkedIn</a>
+          <a class="btn btn-outline" href="index.html#projects">&larr; All projects</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <a class="to-top" href="#top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
+  </a>
+
+  <script>
+    // Fade-in, as on the homepage
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+    // Highlight the current section and keep its link visible in the phone strip
+    const tocList = document.querySelector('.toc ol');
+    const tocLinks = Array.from(document.querySelectorAll('.toc a'));
+    const tocSections = tocLinks.map(link => document.querySelector(link.getAttribute('href')));
+    const toTop = document.querySelector('.to-top');
+    let currentIndex = -1;
+
+    function setActive(index) {
+      if (index === currentIndex) return;
+      currentIndex = index;
+      tocLinks.forEach((link, i) => {
+        link.classList.toggle('active', i === index);
+        if (i === index) {
+          link.setAttribute('aria-current', 'true');
+          if (tocList.scrollWidth > tocList.clientWidth) {
+            const left = link.offsetLeft - tocList.offsetLeft - (tocList.clientWidth - link.offsetWidth) / 2;
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            tocList.scrollTo({ left, behavior: reduce ? 'auto' : 'smooth' });
+          }
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    function updateOnScroll() {
+      const line = window.innerHeight * 0.35;
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      let index = -1;
+      tocSections.forEach((section, i) => {
+        if (section.getBoundingClientRect().top <= line) index = i;
+      });
+      setActive(atBottom ? tocSections.length - 1 : index);
+      toTop.classList.toggle('is-visible', window.scrollY > window.innerHeight);
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        updateOnScroll();
+        ticking = false;
+      });
+    }, { passive: true });
+    window.addEventListener('resize', updateOnScroll);
+    updateOnScroll();
+  </script>
+
+</body>
+
+</html>
